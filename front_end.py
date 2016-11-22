@@ -17,6 +17,7 @@ class FrontEndNode:
         self.x = x
         self.y = y
         self.connection_list = []
+        self.text = ""
 
     def get_x(self):
         return self.x
@@ -26,6 +27,12 @@ class FrontEndNode:
 
     def get_i(self):
         return self.i
+
+    def set_text(self, text_id):
+        self.text = text_id
+
+    def get_text(self):
+        return self.text
 
     def get_connections(self):
         return self.connection_list
@@ -67,15 +74,39 @@ def switch_on_del():
     else:
         del_switch = 0
 
+def display_text():
+    main_window.delete(text_entry_id)
+    main_window.delete(text_button_id)
+    text_id = main_window.create_text(event_x, event_y, text=E1.get(), width=95)
+    fnode.set_text(text_id)
+    
 def make_circle(event):
     global make_circle_switch
     global make_line_switch
     global line_pos
     global del_switch
+    global E1
+    global event_x
+    global event_y
+    global text_entry_id
+    global text_button_id
+    global fnode
     
     if make_circle_switch == 1: 
-        arc = main_window.create_oval(event.x - 50, event.y - 50, event.x + 50, event.y + 50, fill="red")
+        arc = main_window.create_rectangle(event.x - 50, event.y - 50, event.x + 50, event.y + 50, outline="#ABA7A7", width=5, fill="#FFFFFF")
         fnode = FrontEndNode(event.x, event.y, arc)
+
+        #BETA
+        E1 = Entry(main_window, bd=5)
+        text_entry_id = main_window.create_window(event.x, event.y, window=E1)
+
+        event_x = event.x
+        event_y = event.y
+
+        text_button = Button(main_window, text="Create", command=display_text)
+        text_button_id = main_window.create_window(event.x, event.y+50, window=text_button)
+        #END BETA
+    
         circ_list.append(fnode)
         make_circle_switch = 0
 
@@ -85,10 +116,10 @@ def make_circle(event):
                 for line in circ_list[i].get_connections():
                     main_window.delete(line)
                 main_window.delete(circ_list[i].get_i())
+                main_window.delete(circ_list[i].get_text())
                 circ_list.pop(i)
                 del_switch = 0
                 break
-                    
 
     elif make_line_switch != 0:
         for cir in circ_list:
@@ -102,7 +133,9 @@ def make_circle(event):
             line_pos[0].append_connections(line)
             line_pos[1].append_connections(line)
             main_window.tag_raise(line_pos[0].get_i())
+            main_window.tag_raise(line_pos[0].get_text())
             main_window.tag_raise(line_pos[1].get_i())
+            main_window.tag_raise(line_pos[1].get_text())
             make_line_switch = 0
             line_pos = []
     
