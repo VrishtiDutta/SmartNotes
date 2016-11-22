@@ -96,7 +96,6 @@ def make_circle(event):
         arc = main_window.create_rectangle(event.x - 50, event.y - 50, event.x + 50, event.y + 50, outline="#ABA7A7", width=5, fill="#FFFFFF")
         fnode = FrontEndNode(event.x, event.y, arc)
 
-        #BETA
         E1 = Entry(main_window, bd=5)
         text_entry_id = main_window.create_window(event.x, event.y, window=E1)
 
@@ -105,7 +104,6 @@ def make_circle(event):
 
         text_button = Button(main_window, text="Create", command=display_text)
         text_button_id = main_window.create_window(event.x, event.y+50, window=text_button)
-        #END BETA
     
         circ_list.append(fnode)
         make_circle_switch = 0
@@ -184,6 +182,10 @@ if __name__ == "__main__":
     cross_button = Button(main_window, command=switch_on_del)
     cross_button.place(x=400, y=0)
     cross_button.config(image=cross_photo, width="75", height="75")
+
+    deflist = [1050, 15, 1285, 685]
+    main_window.create_rectangle(deflist[0], deflist[1], deflist[2], deflist[3], outline="#ABA7A7", width=5, fill="#FFFFFF")
+    main_window.create_text((deflist[2] + deflist[0]) / 2, 40, text="Definition List", font=("Times", 24))
     
     #Run Program
     main_window.bind("<Button-1>", make_circle)
