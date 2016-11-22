@@ -11,6 +11,9 @@ Press the line button before clicking the second node (or the first node): turn 
 from tkinter import *
 #import tkMessageBox
 
+#global graph_height
+#global visual_graph_height
+
 class FrontEndNode:
 
     def __init__(self, x, y, i):
@@ -144,7 +147,7 @@ def make_circle(event):
             line_pos = []
     
 if __name__ == "__main__":
-
+    
     #Initialize Window
     top = Tk()
     top.wm_title("SmartNotes")
