@@ -119,6 +119,12 @@ class Definition_List:
     def print_list(self):
         for term in self.dictionary:
             print(term.string())
+    
+    def string(self):
+        return_str = ''
+        for term in self.dictionary:
+            return_str += term.string()+"\n"
+        return return_str
 
 class Graph:
     '''store and maintain network of nodes
@@ -174,7 +180,6 @@ def test_parse_node():
     dictionary.add_term(newdef2)
     dictionary.parse_node(testnode)
     dictionary.print_list()
-    dictionary  = None
-    
+    print(dictionary.string())    
 
 test_parse_node()
