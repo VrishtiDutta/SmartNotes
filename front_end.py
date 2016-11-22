@@ -9,6 +9,7 @@ Press the line button before clicking the second node (or the first node): turn 
 """
 
 from tkinter import *
+#import tkMessageBox
 
 class FrontEndNode:
 
@@ -127,6 +128,11 @@ def make_circle(event):
                 break
 
         if make_line_switch == 3:
+            #if will_create_cycle():
+            #    tkMessageBox.showinfo("Error", "This line will create a cycle!")
+            #    make_line_switch = 0
+            #    line_pos = []
+            #    else:
             line = main_window.create_line(line_pos[0].get_x(), line_pos[0].get_y(), line_pos[1].get_x(), line_pos[1].get_y(), width=7)
             line_pos[0].append_connections(line)
             line_pos[1].append_connections(line)
