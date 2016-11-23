@@ -143,6 +143,9 @@ class Graph:
         node1.remove_con(node2)
         self.update_height()
     
+    def delete(self, node):
+        self.graph.remove(node)
+    
     def get(self):
         return self.graph
     
@@ -159,15 +162,20 @@ def test_defintion_heap():
     #dictionary.print_list()
 
 def test_parse_node():
-    dictionary = Definition_List()
-    graph = Graph()    
-    testnode = Node("China is a country in Asia Asia Asia Asia Asia Asia that has been occupied by America America America Military in the 1940s. It is also the largest country in Asia")
-    newdef = Definition("Asia", "An eastern continent")
-    newdef2 = Definition("America", "A country on fire")    
-    dictionary.add_term(newdef)
-    dictionary.add_term(newdef2)
-    dictionary.parse_node(testnode)
-    dictionary.print_list()
-    print(dictionary.string())    
+    #dictionary = Definition_List()
+    root = Node()
+    graph = Graph(root)
+    root.set_text("test")
 
-#test_parse_node()
+    graph.delete(root)
+    print(graph.graph)
+    #testnode = Node("China is a country in Asia Asia Asia Asia Asia Asia that has been occupied by America America America Military in the 1940s. It is also the largest country in Asia")
+    #newdef = Definition("Asia", "An eastern continent")
+    #newdef2 = Definition("America", "A country on fire")    
+    #dictionary.add_term(newdef)
+    #dictionary.add_term(newdef2)
+    #dictionary.parse_node(testnode)
+    #dictionary.print_list()
+    #print(dictionary.string())    
+
+test_parse_node()
