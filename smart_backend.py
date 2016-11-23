@@ -10,7 +10,7 @@ class Node:
     height= 1
     visibility = True 
     def __init__(self): #initialized as a comment node without name
-        self.parent = None   
+        self.parent = None 
         self.connections = dict()
     
     def update_height(self): 
@@ -18,6 +18,8 @@ class Node:
         if (len(self.connections) == 0):
             self.height = 1
         else:
+            for key in self.connections.keys():
+                self.connections[key] = key.get_height()
             self.height = 1 + max(self.connections.values())
 
     def set_text(self,text): #update text
