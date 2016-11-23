@@ -8,11 +8,8 @@ class Node:
     text = ''
     connections = dict()
     height= 1
-    visibility = True
-    
-    def __init__(self, text): #initialized as a comment node without name
-        self.ID = id
-        self.text = text 
+    visibility = True 
+    def __init__(self): #initialized as a comment node without name
         self.parent = None   
     
     def update_height(self): 
@@ -53,19 +50,6 @@ class Node:
     def get_height(self):
         self.update_height() #precautious update
         return self.height
-
-        
-class Concept_Node(Node): 
-    '''node specialized for storing major concepts'''
-    priority = 0
-
-    def __init__(self, name, text):
-        Node.__init__(text)
-        Node.name = name
-
-    def get_name():
-        Node.get_name()
-
 
 class Definition():
     '''definition are implemented as priority queue elements. Number of reference is 
@@ -121,17 +105,22 @@ class Definition_List:
     def print_list(self):
         for term in self.dictionary:
             print(term.string())
+    
+    def string(self):
+        return_str = ''
+        for term in self.dictionary:
+            return_str += term.string()+"\n"
+        return return_str
 
 class Graph:
     '''store and maintain network of nodes
     only add_node(), connect_to, disconnect_from should be evoked, rest are helpers'''
     #update definition list whenever a new node is added
     graph = []
-    root = Node("enter text") #graph must contain at least 1 node
-    root.parent = None
     height = 1
-    def __init__(self):
+    def __init__(self, root):
        # self.graph = list()
+        self.root = root
         self.graph.insert(0,self.root)
         
     def update_height(self):
@@ -179,7 +168,6 @@ def test_parse_node():
     dictionary.add_term(newdef2)
     dictionary.parse_node(testnode)
     dictionary.print_list()
-    dictionary  = None
-    
+    print(dictionary.string())    
 
-test_parse_node()
+#test_parse_node()
