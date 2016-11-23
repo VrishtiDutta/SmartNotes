@@ -10,12 +10,18 @@ Press the line button before clicking the second node (or the first node): turn 
 
 from tkinter import *
 from smart_backend import *
+#from checker import check_cycle
 
-
+global graph_height
+global visual_graph_height
 global definition_list
 global def_list_string
 global graph
 graph = None
+visual_graph_height = None
+
+global plus_minus_list
+plus_minus_list = []
 
 definition_list = Definition_List()
 
@@ -129,7 +135,7 @@ def make_circle(event):
     global text_button_id
     global fnode
     global graph
-
+    global graph_height
 
     #Create Circle
     if make_circle_switch == 1: 
@@ -158,6 +164,8 @@ def make_circle(event):
                 main_window.delete(circ_list[i].get_text_id())
                 graph.delete(circ_list[i])
 
+                graph_height = graph.get_height()
+
                 for item in circ_list:
                     ind_list = []
                     for j in range(len(item.get_pmlist())):
@@ -182,6 +190,7 @@ def make_circle(event):
         #Both Nodes have been chosen
         if make_line_switch == 3:
             graph.connect_to(line_pos[0], line_pos[1])
+            graph_height = graph.get_height()
             line = main_window.create_line(line_pos[0].get_x(), line_pos[0].get_y(), line_pos[1].get_x(), line_pos[1].get_y(), width=7)
             line_pos[0].append_connections(line)
             line_pos[1].append_connections(line)
@@ -191,16 +200,73 @@ def make_circle(event):
             main_window.tag_raise(line_pos[1].get_text_id())
             line_pos[0].append_pmlist(line_pos[1])
             line_pos[1].append_pmlist(line_pos[0])
+                
             make_line_switch = 0
             line_pos = []
+
+##            #If Invalid Connection
+##            if  will_create_cycle():
+##                tp = Toplevel()
+##                tp.title("Error")
+##
+##                msg = Message(tp, text="Lorelai Gilmore is disappointed in you, you were going to create a cycle, please don't do that.")
+##                msg.pack()
+##
+##                but = Button(tp, text="Dismiss", command = tp.destroy)
+##                but.pack()
+##                
+##                make_line_switch = 0
+##                line_pos = []
+##
+##            #If Valid Connection
+##            else:
+            
+                
+##def plus_level():
+##    global plus_minus_list
+##    global graph_height
+##    global visual_graph_height
+##    global circ_list
+##
+##    if visual_graph_height == None:
+##        visual_graph_height = graph_height
+##
+##    if visual_graph_height == 0:
+##        pass
+##    else:
+##        visual_graph_height = visual_graph_height - 1
+##        level_one = []
+##        for cir in circ_list:
+##            if cir.get_height() == visual_graph_height:
+##                level_one.append(cir)
+##
+##        for i in range(len(level_one)):
+##            for line in circ_list[i].get_connections():
+##                main_window.delete(line)
+##            main_window.delete(circ_list[i].get_i())
+##            main_window.delete(circ_list[i].get_text_id())
+##            graph.delete(circ_list[i])
+##
+##            graph_height = graph.get_height()
+##
+##            for item in circ_list:
+##                ind_list = []
+##                for j in range(len(item.get_pmlist())):
+##                    if item.get_pmlist()[j].get_i() == circ_list[i].get_i():
+##                        ind_list.append(j)
+##
+##                for ind in ind_list:
+##                    item.pop_pmlist(ind)
+##                
+##            circ_list.remove(level_one[i])
+        
     
 """Check if this connection is valid in the graph"""
-#def will_create_cycle():
-    #global line_pos
-    #global graph
+def will_create_cycle():
+    global line_pos
+    global graph
 
-    ##return not check_cycle(graph, line_pos[1])
-    #return False
+    return not check_cycle(graph, line_pos[1])
 
 """Update and present the definition list"""
 def send_text_to_list():
@@ -251,6 +317,16 @@ if __name__ == "__main__":
     line_button = Button(main_window, command=switch_on_make_line)
     line_button.place(x=100, y=0)
     line_button.config(image=line_photo, width="75", height="75")
+
+##    #Create Display Layer Button
+##    plus_button = Button(main_window)
+##    plus_button.place(x=200, y=0)
+##    plus_button.config(image=plus_photo, width="75", height="75")
+##
+##    #Create Hide Layer Button
+##    minus_button = Button(main_window, command=plus_level)
+##    minus_button.place(x=300,y=0)
+##    minus_button.config(image=minus_photo, width="75", height="75")
 
     #Create Delete Button
     cross_button = Button(main_window, command=switch_on_del)
