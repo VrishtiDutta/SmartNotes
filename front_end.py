@@ -16,6 +16,7 @@ from smart_backend import *
 global definition_list
 global def_list_string
 global graph
+graph = None
 
 definition_list = Definition_List()
 
@@ -84,6 +85,12 @@ def switch_on_del():
         del_switch = 0
 
 def display_text():
+
+    if graph == None:
+        graph = Graph(fnode)
+    else:
+        graph.add_node(fnode)
+    
     main_window.delete(text_entry_id)
     main_window.delete(text_button_id)
     text_id = main_window.create_text(event_x, event_y, text=E1.get(), width=95)
@@ -151,6 +158,7 @@ def make_circle(event):
                 main_window.tag_raise(line_pos[0].get_text_id())
                 main_window.tag_raise(line_pos[1].get_i())
                 main_window.tag_raise(line_pos[1].get_text_id())
+                graph.connect_to(line_pos[0], line_pos[1])
                 make_line_switch = 0
                 line_pos = []
 
