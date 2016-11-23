@@ -144,7 +144,7 @@ class Graph:
         self.update_height()
     
     def delete(self, node):
-        self.graph.remove(node)
+        self.graph.remove(node) 
     
     def get(self):
         return self.graph
