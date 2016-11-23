@@ -6,11 +6,12 @@ class Node:
     ID = 0
     name = ''
     text = ''
-    connections = dict()
+    connections = None
     height= 1
     visibility = True 
     def __init__(self): #initialized as a comment node without name
         self.parent = None   
+        self.connections = dict()
     
     def update_height(self): 
         '''find the height of tallest child and +1'''
@@ -36,6 +37,7 @@ class Node:
     def add_con(self, node): #add a connection to another node
         self.connections[node] = node.get_height()
         self.update_height()
+        #print(self.connections)
 
     def remove_con(self, node):
         del self.connections[node];
