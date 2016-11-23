@@ -10,7 +10,7 @@ Press the line button before clicking the second node (or the first node): turn 
 
 from tkinter import *
 from smart_backend import *
-from checker import check_cycle
+#from checker import check_cycle
 
 global graph_height
 global visual_graph_height
@@ -192,7 +192,7 @@ def make_circle(event):
         if make_line_switch == 3:
 
             #If Invalid Connection
-            if  will_create_cycle():
+            if  False:
                 tp = Toplevel()
                 tp.title("Error")
 
@@ -263,11 +263,12 @@ def make_circle(event):
         
     
 """Check if this connection is valid in the graph"""
-def will_create_cycle():
-    global line_pos
-    global graph
+#def will_create_cycle():
+    #global line_pos
+    #global graph
 
-    return not check_cycle(graph, line_pos[1])
+    ##return not check_cycle(graph, line_pos[1])
+    #return False
 
 """Update and present the definition list"""
 def send_text_to_list():
