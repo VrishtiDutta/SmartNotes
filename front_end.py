@@ -8,8 +8,13 @@ Press the line button: click one node and then another node and will create a li
 Press the line button before clicking the second node (or the first node): turn off line creation. 
 """
 
-from tkinter import *
-
+try:
+    # for Python2
+    from Tkinter import *   ## notice capitalized T in Tkinter 
+except ImportError:
+    # for Python3
+    from tkinter import * 
+    
 class FrontEndNode:
 
     def __init__(self, x, y, i):
