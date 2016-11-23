@@ -8,6 +8,16 @@ Press the line button: click one node and then another node and will create a li
 Press the line button before clicking the second node (or the first node): turn off line creation. 
 """
 
+<<<<<<< HEAD
+try:
+    # for Python2
+    from Tkinter import *   ## notice capitalized T in Tkinter 
+except ImportError:
+    # for Python3
+    from tkinter import * 
+    
+class FrontEndNode:
+=======
 from tkinter import *
 from smart_backend import *
 #import tkMessageBox
@@ -22,6 +32,7 @@ graph = None
 definition_list = Definition_List()
 
 class FrontEndNode(Node):
+>>>>>>> b7246c96ed3bc6f4bfa054f871d311ba4a001330
 
     def __init__(self, x, y, i):
         self.i = i

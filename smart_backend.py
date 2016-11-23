@@ -1,4 +1,5 @@
 import heapq
+import checker
 
 class Node: 
     '''super class for mindmap node'''
@@ -8,6 +9,8 @@ class Node:
     connections = dict()
     height= 1
     visibility = True 
+    def __init__(self): #initialized as a comment node without name
+        self.parent = None   
     
     def update_height(self): 
         '''find the height of tallest child and +1'''
@@ -131,8 +134,10 @@ class Graph:
         self.graph.insert(0,node)
         
     def connect_to(self, node1, node2):
-        node1.add_con(node2)
-        self.update_height()
+        if checker.check_cycle(self.graph, node2):
+            node1.add_con(node2)
+            node2.parent = node1
+            self.update_height()
     
     def disconnect_from(self, node1, node2):
         node1.remove_con(node2)
