@@ -7,11 +7,7 @@ class Node:
     text = ''
     connections = dict()
     height= 1
-    visibility = True
-    
-    def __init__(self, text): #initialized as a comment node without name
-        self.ID = id
-        self.text = text    
+    visibility = True 
     
     def update_height(self): 
         '''find the height of tallest child and +1'''
@@ -51,19 +47,6 @@ class Node:
     def get_height(self):
         self.update_height() #precautious update
         return self.height
-
-        
-class Concept_Node(Node): 
-    '''node specialized for storing major concepts'''
-    priority = 0
-
-    def __init__(self, name, text):
-        Node.__init__(text)
-        Node.name = name
-
-    def get_name():
-        Node.get_name()
-
 
 class Definition():
     '''definition are implemented as priority queue elements. Number of reference is 
@@ -131,10 +114,10 @@ class Graph:
     only add_node(), connect_to, disconnect_from should be evoked, rest are helpers'''
     #update definition list whenever a new node is added
     graph = []
-    root = Node("enter text") #graph must contain at least 1 node
     height = 1
-    def __init__(self):
+    def __init__(self, root):
        # self.graph = list()
+        self.root = root
         self.graph.insert(0,self.root)
         
     def update_height(self):
@@ -182,4 +165,4 @@ def test_parse_node():
     dictionary.print_list()
     print(dictionary.string())    
 
-test_parse_node()
+#test_parse_node()
