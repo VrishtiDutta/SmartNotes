@@ -82,17 +82,23 @@ def switch_on_make_circle():
     
     if make_circle_switch == 1:
         make_circle_switch = 0
+        
     else:
         make_circle_switch = 1
+        make_line_switch = 0
+        del_switch = 0
 
 """turn on make line button"""
 def switch_on_make_line():
     global make_line_switch
-
+    #make_line_switch = 1
     if make_line_switch == 0:
         make_line_switch = 1
+        make_circle_switch = 0
+        del_switch = 0
     else:
-        make_line_switch = 0
+        make_line_switch = 1
+        
         
 """turn on delete node button"""
 def switch_on_del():
@@ -100,6 +106,8 @@ def switch_on_del():
 
     if del_switch == 0:
         del_switch = 1
+        make_circle_switch = 0
+        make_line_switch = 0
     else:
         del_switch = 0
 
@@ -182,6 +190,7 @@ def make_circle(event):
 
     #Choosing Nodes to Connect
     elif make_line_switch != 0:
+        print(make_line_switch)
         for cir in circ_list:
             if is_in_node(event.x, event.y, cir.get_x(), cir.get_y()):
                 line_pos.append(cir)
@@ -202,7 +211,10 @@ def make_circle(event):
             line_pos[0].append_pmlist(line_pos[1])
             line_pos[1].append_pmlist(line_pos[0])
                 
-            make_line_switch = 0
+            make_line_switch = 1
+            line_pos = []
+        if make_line_switch > 3:
+            make_line_switch = 1
             line_pos = []
 
 ##            #If Invalid Connection

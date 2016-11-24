@@ -12,15 +12,6 @@ class Node:
     def __init__(self): #initialized as a comment node without name
         self.parent = None 
         self.connections = dict()
-    
-    def update_height(self): 
-        '''find the height of tallest child and +1'''
-        if (len(self.connections) == 0):
-            self.height = 1
-        else:
-            for key in self.connections.keys():
-                self.connections[key] = key.get_height()
-            self.height = 1 + max(self.connections.values())
 
     def set_text(self,text): #update text
         self.text = text
@@ -38,12 +29,10 @@ class Node:
 
     def add_con(self, node): #add a connection to another node
         self.connections[node] = node.get_height()
-        self.update_height()
         #print(self.connections)
 
     def remove_con(self, node):
         del self.connections[node];
-        self.update_height()
 
     def get_con(self): #return dictionary of all connections: nodes as keys and height as value
         return self.connections
@@ -52,7 +41,6 @@ class Node:
         self.height = h
 
     def get_height(self):
-        self.update_height() #precautious update
         return self.height
 
 class Definition():
@@ -126,9 +114,6 @@ class Graph:
        # self.graph = list()
         self.root = root
         self.graph.insert(0,self.root)
-        
-    def update_height(self):
-        self.root.update_height()
     
     def get_height(self):
         self.height = self.root.get_height()
@@ -141,11 +126,9 @@ class Graph:
         if checker.check_cycle(self.graph, node2):
             node1.add_con(node2)
             node2.parent = node1
-            self.update_height()
     
     def disconnect_from(self, node1, node2):
         node1.remove_con(node2)
-        self.update_height()
     
     def delete(self, node):
         self.graph.remove(node) 
