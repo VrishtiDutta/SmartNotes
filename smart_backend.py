@@ -70,7 +70,7 @@ class Definition():
         return self.definition
     
     def string(self):
-        return self.term + ": "+ self.definition
+        return self.term + ": "+ self.definition+"\n"
     
     def __lt__(self,other):
         return self.reference > other.reference

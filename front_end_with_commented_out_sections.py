@@ -304,8 +304,7 @@ if __name__ == "__main__":
     top.wm_title("SmartNotes")
     main_window = Canvas(top, bg="#FFFFFF", height=7000, width=1300)
     main_window.pack()
-
-    def_list_string = main_window.create_text(1060, 60, anchor=NW, text=definition_list.string(), font=("Times", 14), width=220)
+    def_list_string = main_window.create_text(500, 60, anchor=NW, text=definition_list.string(), font=("Times", 14), width=220)
 
     #Global Variables
     circ_list = []
