@@ -115,10 +115,11 @@ def display_text():
     
     main_window.delete(text_entry_id)
     main_window.delete(text_button_id)
-    text_id = main_window.create_text(event_x, event_y, text=E1.get(), width=95)
+    text_id = main_window.create_text(event_x, event_y, text=E1.get(1.0, END), width=95)
     fnode.set_text_id(text_id)
-    fnode.set_text(E1.get())
+    fnode.set_text(E1.get(1.0, END))
     definition_list.parse_node(fnode)
+    
 
     main_window.delete(def_list_string)
     def_list_string = main_window.create_text(1060, 60, anchor=NW, text=definition_list.string(), font=("Times", 14), width=220)
@@ -142,7 +143,7 @@ def make_circle(event):
         arc = main_window.create_rectangle(event.x - 50, event.y - 50, event.x + 50, event.y + 50, outline="#ABA7A7", width=5, fill="#FFFFFF")
         fnode = FrontEndNode(event.x, event.y, arc)
 
-        E1 = Entry(main_window, bd=5)
+        E1 = Text(main_window,height=5, width=10)
         text_entry_id = main_window.create_window(event.x, event.y, window=E1)
 
         event_x = event.x
