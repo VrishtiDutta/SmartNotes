@@ -89,9 +89,9 @@ class Definition_List:
         heapq.heapify(self.dictionary)
         
     def parse_node(self,node): #increment reference of definition based on number of occurrence in this node
-        node_str = node.string()
+        node_str = node.string().lower()
         for term in self.dictionary:
-            term.incre_ref(node_str.count(term.get_term()))
+            term.incre_ref(node_str.count(term.get_term().lower()))
         heapq.heapify(self.dictionary)
     
     def print_list(self):
