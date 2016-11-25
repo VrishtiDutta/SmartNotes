@@ -88,6 +88,9 @@ class Definition_List:
     -parse_node should be evoked everytime a new node is generated'''
     dictionary = []
     def add_term(self,definition):
+        for term in self.dictionary:
+            if(term.get_term() == definition.get_term()):
+                return -1
         self.dictionary.insert(0,definition)
         heapq.heapify(self.dictionary)
         
