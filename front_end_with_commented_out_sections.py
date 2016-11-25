@@ -34,16 +34,6 @@ class FrontEndNode(Node):
         self.y = y
         self.connection_list = []
         self.text_id = ""
-        self.pmlist = []
-
-    def get_pmlist(self):
-        return self.pmlist
-
-    def append_pmlist(self, node):
-        self.pmlist.append(node)
-
-    def pop_pmlist(self, i):
-        self.pmlist.pop(i)
 
     def get_x(self):
         return self.x
@@ -98,6 +88,7 @@ def switch_on_make_line():
         del_switch = 0
     else:
         make_line_switch = 1
+        del_switch = 0
         
         
 """turn on delete node button"""
@@ -109,7 +100,7 @@ def switch_on_del():
         make_circle_switch = 0
         make_line_switch = 0
     else:
-        del_switch = 0
+        del_switch = 1
 
 """create node and display text of node"""
 def display_text():
@@ -148,6 +139,8 @@ def make_circle(event):
 
     #Create Circle
     if make_circle_switch == 1: 
+        make_line_switch = 0
+        del_switch = 0
         arc = main_window.create_rectangle(event.x - 50, event.y - 50, event.x + 50, event.y + 50, outline="#ABA7A7", width=5, fill="#FFFFFF")
         fnode = FrontEndNode(event.x, event.y, arc)
 
@@ -165,6 +158,7 @@ def make_circle(event):
 
     #Delete Circle
     elif del_switch == 1:
+        make_line_switch = 0
         for i in range(len(circ_list)):
             if is_in_node(event.x, event.y, circ_list[i].get_x(), circ_list[i].get_y()):
                 for line in circ_list[i].get_connections():
@@ -177,12 +171,7 @@ def make_circle(event):
 
                 for item in circ_list:
                     ind_list = []
-                    for j in range(len(item.get_pmlist())):
-                        if item.get_pmlist()[j].get_i() == circ_list[i].get_i():
-                            ind_list.append(j)
 
-                    for ind in ind_list:
-                        item.pop_pmlist(ind)
     
                 circ_list.pop(i)
                 del_switch = 0
@@ -190,6 +179,7 @@ def make_circle(event):
 
     #Choosing Nodes to Connect
     elif make_line_switch != 0:
+        del_switch = 0
         print(make_line_switch)
         for cir in circ_list:
             if is_in_node(event.x, event.y, cir.get_x(), cir.get_y()):
@@ -208,8 +198,6 @@ def make_circle(event):
             main_window.tag_raise(line_pos[0].get_text_id())
             main_window.tag_raise(line_pos[1].get_i())
             main_window.tag_raise(line_pos[1].get_text_id())
-            line_pos[0].append_pmlist(line_pos[1])
-            line_pos[1].append_pmlist(line_pos[0])
                 
             make_line_switch = 1
             line_pos = []
@@ -286,10 +274,13 @@ def send_text_to_list():
     global def_list_string
 
     new_def = Definition(Eterm.get(), Edef.get())
+    Eterm.delete(0, END)
+    Edef.delete(0, END)
     Eterm.get()
     Edef.get()
     definition_list.add_term(new_def)
-    definition_list.update_ref(graph.graph)
+    if(graph != None):
+        definition_list.update_ref(graph.graph)
     main_window.delete(def_list_string)
     def_list_string = main_window.create_text(960, 60, anchor=NW, text=definition_list.string(), font=("Times", 12), width=320)
     
