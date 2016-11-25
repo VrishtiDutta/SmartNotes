@@ -59,6 +59,9 @@ class Definition():
         
     def decre_ref(self, num):
         self.reference -= num
+    
+    def set_ref(self, num):
+        self.reference = num
         
     def get_ref(self):
         return self.reference
@@ -93,6 +96,12 @@ class Definition_List:
         for term in self.dictionary:
             term.incre_ref(node_str.count(term.get_term().lower()))
         heapq.heapify(self.dictionary)
+    
+    def update_ref(self, graph):
+        for term in self.dictionary:
+            term.set_ref(0)
+        for node in graph:
+            self.parse_node(node)
     
     def print_list(self):
         for term in self.dictionary:

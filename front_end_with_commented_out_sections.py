@@ -130,7 +130,7 @@ def display_text():
     
 
     main_window.delete(def_list_string)
-    def_list_string = main_window.create_text(1060, 60, anchor=NW, text=definition_list.string(), font=("Times", 14), width=220)
+    def_list_string = main_window.create_text(960, 60, anchor=NW, text=definition_list.string(), font=("Times", 12), width=320)
     
 def make_circle(event):
     global make_circle_switch
@@ -289,8 +289,9 @@ def send_text_to_list():
     Eterm.get()
     Edef.get()
     definition_list.add_term(new_def)
+    definition_list.update_ref(graph.graph)
     main_window.delete(def_list_string)
-    def_list_string = main_window.create_text(1060, 60, anchor=NW, text=definition_list.string(), font=("Times", 14), width=220)
+    def_list_string = main_window.create_text(960, 60, anchor=NW, text=definition_list.string(), font=("Times", 12), width=320)
     
 if __name__ == "__main__":
 
@@ -304,7 +305,7 @@ if __name__ == "__main__":
     top.wm_title("SmartNotes")
     main_window = Canvas(top, bg="#FFFFFF", height=7000, width=1300)
     main_window.pack()
-    def_list_string = main_window.create_text(500, 60, anchor=NW, text=definition_list.string(), font=("Times", 14), width=220)
+    def_list_string = main_window.create_text(500, 60, anchor=NW, text=definition_list.string(), font=("Times", 12), width=220)
 
     #Global Variables
     circ_list = []
@@ -346,15 +347,15 @@ if __name__ == "__main__":
     cross_button.config(image=cross_photo, width="75", height="75")
 
     #Create Definition List
-    deflist = [1050, 15, 1285, 685]
+    deflist = [950, 15, 1285, 685]
     main_window.create_rectangle(deflist[0], deflist[1], deflist[2], deflist[3], outline="#ABA7A7", width=5, fill="#FFFFFF")
     main_window.create_text((deflist[2] + deflist[0]) / 2, 40, text="Definition List", font=("Times", 24))
 
-    main_window.create_text((deflist[2] + deflist[0]) / 2, 560, text="Term", font=("Times", 16))
+    main_window.create_text((deflist[2] + deflist[0]) / 2, 560, text="Term", font=("Times", 12))
     Eterm = Entry(main_window, bd=2)
     term_entry_id = main_window.create_window((deflist[2] + deflist[0]) / 2, 580, window=Eterm)
 
-    main_window.create_text((deflist[2] + deflist[0]) / 2, 600, text="Enter Definition", font=("Times", 16))
+    main_window.create_text((deflist[2] + deflist[0]) / 2, 600, text="Enter Definition", font=("Times", 12))
     Edef = Entry(main_window, bd=2)
     definition_entry_id = main_window.create_window((deflist[2] + deflist[0]) / 2, 620, window=Edef)
     
