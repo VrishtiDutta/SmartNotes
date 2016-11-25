@@ -94,6 +94,12 @@ class Definition_List:
         self.dictionary.insert(0,definition)
         heapq.heapify(self.dictionary)
         
+    def remove_term(self, word):
+        for i in range(len(self.dictionary)):
+            if self.dictionary[i].term == word:
+                self.dictionary.pop(i)
+        
+        
     def parse_node(self,node): #increment reference of definition based on number of occurrence in this node
         node_str = node.string().lower()
         for term in self.dictionary:

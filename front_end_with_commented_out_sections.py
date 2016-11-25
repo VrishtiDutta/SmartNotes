@@ -269,7 +269,14 @@ def will_create_cycle():
 
     return not check_cycle(graph, line_pos[1])
 
+def del_text_from_list():
+    global def_list_string
+    definition_list.remove_term(Eterm.get())
+    Eterm.get()
+    main_window.delete(def_list_string)
+    def_list_string = main_window.create_text(960, 60, anchor=NW, text=definition_list.string(), font=("Times", 12), width=320)    
 """Update and present the definition list"""
+
 def send_text_to_list():
     global def_list_string
 
@@ -351,7 +358,10 @@ if __name__ == "__main__":
     definition_entry_id = main_window.create_window((deflist[2] + deflist[0]) / 2, 620, window=Edef)
     
     term_create_button = Button(main_window, text="Submit", command=send_text_to_list)
-    text_button_id = main_window.create_window((deflist[2] + deflist[0]) / 2, 660, window=term_create_button)
+    text_button_id = main_window.create_window(deflist[0]+135, 660, window=term_create_button)
+    
+    term_delete_button = Button(main_window, text="Delete", command=del_text_from_list)
+    text_del_button_id = main_window.create_window(deflist[0]+200, 660, window=term_delete_button)    
     
     #Run Program
     main_window.bind("<Button-1>", make_circle)
