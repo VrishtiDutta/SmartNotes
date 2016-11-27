@@ -36,6 +36,7 @@ class FrontEndNode(Node):
         self.y = y
         self.connection_list = []
         self.text_id = ""
+        self.connect_id = []
 
     def get_x(self):
         return self.x
@@ -63,6 +64,9 @@ class FrontEndNode(Node):
 
     def append_connections(self, line):
         self.connection_list.append(line)
+    
+    def append_connect_id(self, ID):
+        self.connect_id.append(ID)    
 
 """Check if click is in node"""
 def is_in_node(x, y, cir_x, cir_y):
@@ -123,7 +127,7 @@ def display_text():
     
     main_window.delete(text_entry_id)
     main_window.delete(text_button_id)
-    text_id = main_window.create_text(event_x, event_y+10, text=E1.get(1.0, END)+default_text, width=95, tags="token")
+    text_id = main_window.create_text(event_x, event_y+10, text=E1.get(1.0, END)+default_text, width=95, tags="node")
     fnode.set_text_id(text_id)
     fnode.set_text(E1.get(1.0, END))
     definition_list.parse_node(fnode)
@@ -131,7 +135,7 @@ def display_text():
 
     main_window.delete(def_list_string)
     def_list_string = main_window.create_text(960, 60, anchor=NW, text=definition_list.string(), font=("Times", 12), width=320)
-    
+
 def make_circle(event):
     global make_circle_switch
     global make_line_switch
@@ -145,12 +149,16 @@ def make_circle(event):
     global fnode
     global graph
     global graph_height
-
+    global comment_entry_id
+    global comment_button_id
+    global comment_entry    
+    global second_line_pos
+    
     #Create Circle
     if make_circle_switch == 1: 
         make_line_switch = 0
         del_switch = 0
-        arc = main_window.create_rectangle(event.x - 50, event.y - 50, event.x + 50, event.y + 50, outline="#ABA7A7", width=5, fill="#FFFFFF", tags="token")
+        arc = main_window.create_rectangle(event.x - 50, event.y - 50, event.x + 50, event.y + 50, outline="#ABA7A7", width=5, fill="#FFFFFF", tags="node")
         
         
         fnode = FrontEndNode(event.x, event.y, arc)
@@ -192,7 +200,6 @@ def make_circle(event):
     #Choosing Nodes to Connect
     elif make_line_switch != 0:
         del_switch = 0
-        print(make_line_switch)
         for cir in circ_list:
             if is_in_node(event.x, event.y, cir.get_x(), cir.get_y()):
                 line_pos.append(cir)
@@ -202,21 +209,54 @@ def make_circle(event):
         #Both Nodes have been chosen
         if make_line_switch == 3:
             graph.connect_to(line_pos[0], line_pos[1])
-            graph_height = graph.get_height()
-            line = main_window.create_line(line_pos[0].get_x(), line_pos[0].get_y(), line_pos[1].get_x(), line_pos[1].get_y(), width=7)
+            line = main_window.create_line(line_pos[0].get_x(), line_pos[0].get_y(), line_pos[1].get_x(), line_pos[1].get_y(), width=7, tags="line", fill='blue')
             line_pos[0].append_connections(line)
             line_pos[1].append_connections(line)
             main_window.tag_raise(line_pos[0].get_i())
             main_window.tag_raise(line_pos[0].get_text_id())
             main_window.tag_raise(line_pos[1].get_i())
             main_window.tag_raise(line_pos[1].get_text_id())
-                
-            make_line_switch = 1
+        
+            line_comment_x = (line_pos[0].get_x() + line_pos[1].get_x()) / 2
+            line_comment_y = (line_pos[0].get_y() + line_pos[1].get_y()) / 2
+        
+            comment_entry = Entry(main_window, bd=5)
+            comment_entry_id = main_window.create_window(line_comment_x, line_comment_y, window=comment_entry)
+            comment_entry_bottom = main_window.bbox(comment_entry_id)[3]
+        
+            comment_button = Button(main_window, text="Create", command=lambda: createConnection(line_pos))
+            comment_button_id = main_window.create_window(line_comment_x, comment_entry_bottom + 5, window=comment_button, anchor=N)
+ 
+            make_line_switch = 0
             line_pos = []
         if make_line_switch > 3:
             make_line_switch = 1
             line_pos = []
         
+def createConnection(line_pos):
+    global comment_entry_id
+    global comment_button_id
+    global comment_entry
+    global second_line_pos
+
+    ebbox = main_window.bbox(comment_entry_id)
+    tbbox = main_window.bbox(comment_button_id)
+    
+    main_window.delete(comment_entry_id)
+    main_window.delete(comment_button_id)
+
+    new_coors = (ebbox[0] + ebbox[2]) / 2, (ebbox[1] + ebbox[3]) / 2
+
+    conn_id = main_window.create_text(new_coors,text=comment_entry.get())
+
+    comment_rect_id = main_window.create_rectangle(main_window.bbox(conn_id), fill="#FFFFFF")
+    main_window.tag_raise(conn_id)
+
+    second_line_pos[0].append_connect_id((conn_id, comment_rect_id))
+    second_line_pos[1].append_connect_id((conn_id, comment_rect_id))
+
+    second_line_pos = []
+    
     
 """Check if this connection is valid in the graph"""
 def will_create_cycle():
@@ -256,8 +296,9 @@ def OnTokenButtonPress(event):
     '''Being drag of an object'''
     
     # record the item and its location
-    if(len(main_window.find_overlapping(event.x-25, event.y-25, event.x+25, event.y+25))==2):
+    if(len(main_window.find_overlapping(event.x-25, event.y-25, event.x+25, event.y+25))>=2):
         main_window.drag_data["items"] = main_window.find_overlapping(event.x-25, event.y-25, event.x+25, event.y+25)
+        print(main_window.drag_data["items"])
     main_window.drag_data["x"] = event.x
     main_window.drag_data["y"] = event.y
     selected_node = find_selected_node(event, circ_list)
@@ -272,17 +313,17 @@ def OnTokenButtonRelease(event):
 
 def OnTokenMotion(event):
     
-    selected_node = find_selected_node(event, circ_list)
-    if(selected_node != None):
-        print(selected_node.string())    
+    selected_node = find_selected_node(event, circ_list) 
     '''Handle dragging of an object'''
     # compute how much this object has moved
     delta_x = event.x - main_window.drag_data["x"]
     delta_y = event.y - main_window.drag_data["y"]
     # move the object the appropriate amount
     if(main_window.drag_data["items"]!=None):
-        main_window.move(main_window.drag_data["items"][0], delta_x, delta_y)
-        main_window.move(main_window.drag_data["items"][1], delta_x, delta_y)
+        for item in main_window.drag_data['items']:
+            print(main_window.gettags(item))
+            if main_window.gettags(item)[0] == 'node':
+                main_window.move(item, delta_x, delta_y)
     # record the new position
     main_window.drag_data["x"] = event.x
     main_window.drag_data["y"] = event.y
@@ -367,8 +408,8 @@ if __name__ == "__main__":
     
     #Run Program
     main_window.bind("<Button-1>", make_circle)
-    main_window.tag_bind("token", "<ButtonPress-1>", OnTokenButtonPress)
-    main_window.tag_bind("token", "<ButtonRelease-1>", OnTokenButtonRelease)
-    main_window.tag_bind("token", "<B1-Motion>", OnTokenMotion)     
+    main_window.tag_bind("node", "<ButtonPress-1>", OnTokenButtonPress)
+    main_window.tag_bind("node", "<ButtonRelease-1>", OnTokenButtonRelease)
+    main_window.tag_bind("node", "<B1-Motion>", OnTokenMotion)     
     main_window.pack()
     top.mainloop()
