@@ -28,7 +28,7 @@ plus_minus_list = []
 definition_list = Definition_List()
 
 class FrontEndNode(Node):
-
+    comments = dict()
     def __init__(self, x, y, i):
         Node.__init__(self)
         self.i = i
@@ -58,6 +58,12 @@ class FrontEndNode(Node):
 
     def get_text_id(self):
         return self.text_id
+    
+    def get_connect_id(self):
+        return self.connect_id
+
+    def append_connect_id(self, ID):
+        self.connect_id.append(ID)
 
     def get_connections(self):
         return self.connection_list
@@ -66,7 +72,10 @@ class FrontEndNode(Node):
         self.connection_list.append(line)
     
     def append_connect_id(self, ID):
-        self.connect_id.append(ID)    
+        self.connect_id.append(ID)   
+        
+    def bind_comment(self, line, comment):
+        self.comments[line] = comment
 
 """Check if click is in node"""
 def is_in_node(x, y, cir_x, cir_y):
@@ -135,6 +144,34 @@ def display_text():
 
     main_window.delete(def_list_string)
     def_list_string = main_window.create_text(960, 60, anchor=NW, text=definition_list.string(), font=("Times", 12), width=320)
+    
+def delete_connections(node):
+    con_text = node.get_connect_id()
+    for a in range(len(node.get_connections())):
+        main_window.delete(node.get_connections()[a])
+        main_window.delete(con_text[a][0])
+        main_window.delete(con_text[a][1])
+
+def draw_connection(node1, node2):
+    line = main_window.create_line(node1.get_x(), node1.get_y(), node2.get_x(), node2.get_y(), width=7, tags="line", fill='blue')
+    node1.append_connections(line)
+    node2.append_connections(line)    
+    main_window.tag_raise(node1.get_i())
+    main_window.tag_raise(node1.get_text_id())
+    main_window.tag_raise(node2.get_i())
+    main_window.tag_raise(node2.get_text_id())    
+
+def redraw_connections(node):
+    for line in node.get_connections():
+        main_window.delete(line)
+    for a in graph.graph:
+        if a!=node and node in a.get_con():
+            #redrawline with comments
+            draw_connection(a, node)
+            
+    #for a in graph:
+    # if a is connected to node
+    # draw connection (a, node)
 
 def make_circle(event):
     global make_circle_switch
@@ -181,21 +218,19 @@ def make_circle(event):
         make_line_switch = 0
         for i in range(len(circ_list)):
             if is_in_node(event.x, event.y, circ_list[i].get_x(), circ_list[i].get_y()):
-                for line in circ_list[i].get_connections():
-                    main_window.delete(line)
+                delete_connections(circ_list[i])
+                #con_text = circ_list[i].get_connect_id()
+                #for a in range(len(circ_list[i].get_connections())):
+                    #main_window.delete(circ_list[i].get_connections()[a])
+                    #main_window.delete(con_text[a][0])
+                    #main_window.delete(con_text[a][1])
                 main_window.delete(circ_list[i].get_i())
                 main_window.delete(circ_list[i].get_text_id())
                 graph.delete(circ_list[i])
-
-                graph_height = graph.get_height()
-
-                for item in circ_list:
-                    ind_list = []
-
-    
                 circ_list.pop(i)
                 del_switch = 0
                 break
+        
 
     #Choosing Nodes to Connect
     elif make_line_switch != 0:
@@ -209,13 +244,14 @@ def make_circle(event):
         #Both Nodes have been chosen
         if make_line_switch == 3:
             graph.connect_to(line_pos[0], line_pos[1])
-            line = main_window.create_line(line_pos[0].get_x(), line_pos[0].get_y(), line_pos[1].get_x(), line_pos[1].get_y(), width=7, tags="line", fill='blue')
-            line_pos[0].append_connections(line)
-            line_pos[1].append_connections(line)
-            main_window.tag_raise(line_pos[0].get_i())
-            main_window.tag_raise(line_pos[0].get_text_id())
-            main_window.tag_raise(line_pos[1].get_i())
-            main_window.tag_raise(line_pos[1].get_text_id())
+            draw_connection(line_pos[0], line_pos[1])
+            #line = main_window.create_line(line_pos[0].get_x(), line_pos[0].get_y(), line_pos[1].get_x(), line_pos[1].get_y(), width=7, tags="line", fill='blue')
+            #line_pos[0].append_connections(line)
+            #line_pos[1].append_connections(line)
+            #main_window.tag_raise(line_pos[0].get_i())
+            #main_window.tag_raise(line_pos[0].get_text_id())
+            #main_window.tag_raise(line_pos[1].get_i())
+            #main_window.tag_raise(line_pos[1].get_text_id())
         
             line_comment_x = (line_pos[0].get_x() + line_pos[1].get_x()) / 2
             line_comment_y = (line_pos[0].get_y() + line_pos[1].get_y()) / 2
@@ -223,8 +259,11 @@ def make_circle(event):
             comment_entry = Entry(main_window, bd=5)
             comment_entry_id = main_window.create_window(line_comment_x, line_comment_y, window=comment_entry)
             comment_entry_bottom = main_window.bbox(comment_entry_id)[3]
+            
+            second_line_pos = [line_pos[0], line_pos[1]]
         
             comment_button = Button(main_window, text="Create", command=lambda: createConnection(line_pos))
+            print(comment_entry.get())
             comment_button_id = main_window.create_window(line_comment_x, comment_entry_bottom + 5, window=comment_button, anchor=N)
  
             make_line_switch = 0
@@ -247,6 +286,11 @@ def createConnection(line_pos):
 
     new_coors = (ebbox[0] + ebbox[2]) / 2, (ebbox[1] + ebbox[3]) / 2
 
+    #-----
+    second_line_pos[0].add_con(second_line_pos[1])
+    second_line_pos[1].add_con(second_line_pos[0])
+    #----
+    
     conn_id = main_window.create_text(new_coors,text=comment_entry.get())
 
     comment_rect_id = main_window.create_rectangle(main_window.bbox(conn_id), fill="#FFFFFF")
@@ -321,9 +365,10 @@ def OnTokenMotion(event):
     # move the object the appropriate amount
     if(main_window.drag_data["items"]!=None):
         for item in main_window.drag_data['items']:
-            print(main_window.gettags(item))
-            if main_window.gettags(item)[0] == 'node':
-                main_window.move(item, delta_x, delta_y)
+            if len(main_window.gettags(item))!=0:
+                print(main_window.gettags(item))
+                if main_window.gettags(item)[0] == 'node':
+                    main_window.move(item, delta_x, delta_y)
     # record the new position
     main_window.drag_data["x"] = event.x
     main_window.drag_data["y"] = event.y
@@ -332,6 +377,7 @@ def OnTokenMotion(event):
         #print(selected_node.get_x()+delta_x +"assadsadssadk"+ selected_node.get_y()+delta_y)
         selected_node.set_x(selected_node.get_x()+delta_x)
         selected_node.set_y(selected_node.get_y()+delta_y)
+        redraw_connections(selected_node)
 
 if __name__ == "__main__":
 
