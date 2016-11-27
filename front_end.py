@@ -29,6 +29,13 @@ class FrontEndNode(Node):
         self.connection_list = []
         self.text_id = ""
         self.pmlist = []
+        self.connect_id = []
+
+    def get_connect_id(self):
+        return self.connect_id
+
+    def append_connect_id(self, ID):
+        self.connect_id.append(ID)
 
     def get_pmlist(self):
         return self.pmlist
@@ -129,6 +136,10 @@ def make_circle(event):
     global text_button_id
     global fnode
     global graph
+    global comment_entry_id
+    global comment_button_id
+    global comment_entry
+    global second_line_pos
 
 
     #Create Circle
@@ -152,8 +163,11 @@ def make_circle(event):
     elif del_switch == 1:
         for i in range(len(circ_list)):
             if is_in_node(event.x, event.y, circ_list[i].get_x(), circ_list[i].get_y()):
-                for line in circ_list[i].get_connections():
-                    main_window.delete(line)
+                con_text = circ_list[i].get_connect_id()
+                for a in range(len(circ_list[i].get_connections())):
+                    main_window.delete(circ_list[i].get_connections()[a])
+                    main_window.delete(con_text[a][0])
+                    main_window.delete(con_text[a][1])
                 main_window.delete(circ_list[i].get_i())
                 main_window.delete(circ_list[i].get_text_id())
                 graph.delete(circ_list[i])
@@ -191,8 +205,45 @@ def make_circle(event):
             main_window.tag_raise(line_pos[1].get_text_id())
             line_pos[0].append_pmlist(line_pos[1])
             line_pos[1].append_pmlist(line_pos[0])
+
+            line_comment_x = (line_pos[0].get_x() + line_pos[1].get_x()) / 2
+            line_comment_y = (line_pos[0].get_y() + line_pos[1].get_y()) / 2
+
+            comment_entry = Entry(main_window, bd=5)
+            comment_entry_id = main_window.create_window(line_comment_x, line_comment_y, window=comment_entry)
+            comment_entry_bottom = main_window.bbox(comment_entry_id)[3]
+
+            second_line_pos = [line_pos[0], line_pos[1]]
+
+            comment_button = Button(main_window, text="Create", command=lambda: createConnection(line_pos))
+            comment_button_id = main_window.create_window(line_comment_x, comment_entry_bottom + 5, window=comment_button, anchor=N)
+            
             make_line_switch = 0
             line_pos = []
+
+def createConnection(line_pos):
+    global comment_entry_id
+    global comment_button_id
+    global comment_entry
+    global second_line_pos
+
+    ebbox = main_window.bbox(comment_entry_id)
+    tbbox = main_window.bbox(comment_button_id)
+    
+    main_window.delete(comment_entry_id)
+    main_window.delete(comment_button_id)
+
+    new_coors = (ebbox[0] + ebbox[2]) / 2, (ebbox[1] + ebbox[3]) / 2
+
+    conn_id = main_window.create_text(new_coors,text=comment_entry.get())
+
+    comment_rect_id = main_window.create_rectangle(main_window.bbox(conn_id), fill="#FFFFFF")
+    main_window.tag_raise(conn_id)
+
+    second_line_pos[0].append_connect_id((conn_id, comment_rect_id))
+    second_line_pos[1].append_connect_id((conn_id, comment_rect_id))
+
+    second_line_pos = []
     
 """Check if this connection is valid in the graph"""
 #def will_create_cycle():
