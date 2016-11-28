@@ -257,7 +257,6 @@ def make_circle(event):
             second_line_pos = [line_pos[0], line_pos[1]]
         
             comment_button = Button(main_window, text="Create", command=lambda: createConnection(line_pos))
-            print(comment_entry.get())
             comment_button_id = main_window.create_window(line_comment_x, comment_entry_bottom + 5, window=comment_button, anchor=N)
  
             make_line_switch = 0
@@ -334,11 +333,13 @@ def find_selected_node(event, circ_list):
     
 def OnTokenButtonPress(event):
     '''Being drag of an object'''
-    
+    overlaplist = main_window.find_overlapping(event.x-25, event.y-25, event.x+25, event.y+25)
+    overlaptaglist = []
+    for element in overlaplist:
+        overlaptaglist.insert(0,main_window.gettags(element)[0])
     # record the item and its location
-    if(len(main_window.find_overlapping(event.x-25, event.y-25, event.x+25, event.y+25))>=2):
+    if(overlaptaglist.count("node")>=2):
         main_window.drag_data["items"] = main_window.find_overlapping(event.x-25, event.y-25, event.x+25, event.y+25)
-        print(main_window.drag_data["items"])
     main_window.drag_data["x"] = event.x
     main_window.drag_data["y"] = event.y
     selected_node = find_selected_node(event, circ_list)
@@ -362,12 +363,11 @@ def OnTokenMotion(event):
     if(main_window.drag_data["items"]!=None):
         for item in main_window.drag_data['items']:
             if len(main_window.gettags(item))!=0:
-                print(main_window.gettags(item))
                 if main_window.gettags(item)[0] == 'node':
                     main_window.move(item, delta_x, delta_y)
-    # record the new position
-    main_window.drag_data["x"] = event.x
-    main_window.drag_data["y"] = event.y
+                    # record the new position
+                    main_window.drag_data["x"] = event.x
+                    main_window.drag_data["y"] = event.y
     
     if(selected_node!=None):
         #print(selected_node.get_x()+delta_x +"assadsadssadk"+ selected_node.get_y()+delta_y)
