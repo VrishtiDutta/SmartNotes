@@ -149,8 +149,9 @@ def delete_connections(node):
     con_text = node.get_connect_id()
     for a in range(len(node.get_connections())):
         main_window.delete(node.get_connections()[a])
-        main_window.delete(con_text[a][0])
-        main_window.delete(con_text[a][1])
+        if(len(con_text)>a):
+            main_window.delete(con_text[a][0])
+            main_window.delete(con_text[a][1])
 
 def draw_connection(node1, node2):
     line = main_window.create_line(node1.get_x(), node1.get_y(), node2.get_x(), node2.get_y(), width=7, tags="line", fill='blue')
@@ -224,11 +225,6 @@ def make_circle(event):
         for i in range(len(circ_list)):
             if is_in_node(event.x, event.y, circ_list[i].get_x(), circ_list[i].get_y()):
                 delete_connections(circ_list[i])
-                #con_text = circ_list[i].get_connect_id()
-                #for a in range(len(circ_list[i].get_connections())):
-                    #main_window.delete(circ_list[i].get_connections()[a])
-                    #main_window.delete(con_text[a][0])
-                    #main_window.delete(con_text[a][1])
                 main_window.delete(circ_list[i].get_i())
                 main_window.delete(circ_list[i].get_text_id())
                 graph.delete(circ_list[i])
@@ -250,14 +246,7 @@ def make_circle(event):
         if make_line_switch == 3:
             graph.connect_to(line_pos[0], line_pos[1])
             draw_connection(line_pos[0], line_pos[1])
-            #line = main_window.create_line(line_pos[0].get_x(), line_pos[0].get_y(), line_pos[1].get_x(), line_pos[1].get_y(), width=7, tags="line", fill='blue')
-            #line_pos[0].append_connections(line)
-            #line_pos[1].append_connections(line)
-            #main_window.tag_raise(line_pos[0].get_i())
-            #main_window.tag_raise(line_pos[0].get_text_id())
-            #main_window.tag_raise(line_pos[1].get_i())
-            #main_window.tag_raise(line_pos[1].get_text_id())
-        
+
             line_comment_x = (line_pos[0].get_x() + line_pos[1].get_x()) / 2
             line_comment_y = (line_pos[0].get_y() + line_pos[1].get_y()) / 2
         
