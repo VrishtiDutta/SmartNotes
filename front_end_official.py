@@ -364,23 +364,24 @@ def OnTokenMotion(event):
     selected_node = find_selected_node(event, circ_list) 
     '''Handle dragging of an object'''
     # compute how much this object has moved
-    delta_x = event.x - main_window.drag_data["x"]
-    delta_y = event.y - main_window.drag_data["y"]
-    # move the object the appropriate amount
-    if(main_window.drag_data["items"]!=None):
-        for item in main_window.drag_data['items']:
-            if len(main_window.gettags(item))!=0:
-                if main_window.gettags(item)[0] == 'node':
-                    main_window.move(item, delta_x, delta_y)
-                    # record the new position
-                    main_window.drag_data["x"] = event.x
-                    main_window.drag_data["y"] = event.y
-    
     if(selected_node!=None):
-        #print(selected_node.get_x()+delta_x +"assadsadssadk"+ selected_node.get_y()+delta_y)
-        selected_node.set_x(selected_node.get_x()+delta_x)
-        selected_node.set_y(selected_node.get_y()+delta_y)
-        redraw_connections(selected_node)
+        delta_x = event.x - main_window.drag_data["x"]
+        delta_y = event.y - main_window.drag_data["y"]
+        # move the object the appropriate amount
+        if(main_window.drag_data["items"]!=None):
+            for item in main_window.drag_data['items']:
+                if len(main_window.gettags(item))!=0:
+                    if main_window.gettags(item)[0] == 'node':
+                        main_window.move(item, delta_x, delta_y)
+                        # record the new position
+                        main_window.drag_data["x"] = event.x
+                        main_window.drag_data["y"] = event.y
+        
+        if(selected_node!=None):
+            #print(selected_node.get_x()+delta_x +"assadsadssadk"+ selected_node.get_y()+delta_y)
+            selected_node.set_x(selected_node.get_x()+delta_x)
+            selected_node.set_y(selected_node.get_y()+delta_y)
+            redraw_connections(selected_node)
 
 if __name__ == "__main__":
 
