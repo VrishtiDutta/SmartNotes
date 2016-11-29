@@ -173,7 +173,6 @@ def test_parse_node():
     root.set_text("test")
 
     graph.delete(root)
-    print(graph.graph)
     #testnode = Node("China is a country in Asia Asia Asia Asia Asia Asia that has been occupied by America America America Military in the 1940s. It is also the largest country in Asia")
     #newdef = Definition("Asia", "An eastern continent")
     #newdef2 = Definition("America", "A country on fire")    

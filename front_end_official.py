@@ -169,7 +169,7 @@ def redraw_connections(node):
             #redrawline with comments
             draw_connection(a, node)
             new_coors = (abs(int(a.get_x()+node.get_x())/2), abs(int(a.get_y()+node.get_y())/2))
-            conn_id = main_window.create_text(new_coors, text= node.comments[a])
+            conn_id = main_window.create_text(new_coors, text = a.comments[node])
             comment_rect_id = main_window.create_rectangle(main_window.bbox(conn_id), fill="#FFFFFF")
             main_window.tag_raise(conn_id)
             node.append_connect_id((conn_id, comment_rect_id))
@@ -283,7 +283,7 @@ def createConnection(line_pos):
     second_line_pos[0].add_con(second_line_pos[1])
     second_line_pos[0].bind_comment(second_line_pos[1], comment_entry.get())
     second_line_pos[1].add_con(second_line_pos[0])
-    second_line_pos[0].bind_comment(second_line_pos[0], comment_entry.get())
+    second_line_pos[1].bind_comment(second_line_pos[0], comment_entry.get())
     #----
     
     conn_id = main_window.create_text(new_coors,text=comment_entry.get())
