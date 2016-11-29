@@ -132,7 +132,7 @@ def display_text():
     global graph
     global def_list_string
     
-    default_text = '' #(9*13-len(E1.get(1.0, END))-21)*'.'
+    default_text = ''
     if graph == None:
         graph = Graph(fnode)
     else:
@@ -179,10 +179,6 @@ def redraw_connections(node):
             main_window.tag_raise(conn_id)
             node.append_connect_id((conn_id, comment_rect_id))
             a.append_connect_id((conn_id, comment_rect_id))            
-            
-    #for a in graph:
-    # if a is connected to node
-    # draw connection (a, node)
 
 def make_circle(event):
     global make_circle_switch
@@ -287,10 +283,8 @@ def createConnection(line_pos):
     #-----
     second_line_pos[0].add_con(second_line_pos[1])
     second_line_pos[0].bind_comment(second_line_pos[1], comment_entry.get())
-    print(second_line_pos[0].get_comments())
     second_line_pos[1].add_con(second_line_pos[0])
     second_line_pos[1].bind_comment(second_line_pos[0], comment_entry.get())
-    print(second_line_pos[1].get_comments())
     #----
     
     conn_id = main_window.create_text(new_coors,text=comment_entry.get())
@@ -369,19 +363,23 @@ def OnTokenMotion(event):
         delta_y = event.y - main_window.drag_data["y"]
         # move the object the appropriate amount
         if(main_window.drag_data["items"]!=None):
+            tags = []
             for item in main_window.drag_data['items']:
-                if len(main_window.gettags(item))!=0:
-                    if main_window.gettags(item)[0] == 'node':
-                        main_window.move(item, delta_x, delta_y)
-                        # record the new position
-                        main_window.drag_data["x"] = event.x
-                        main_window.drag_data["y"] = event.y
+                if(len(main_window.gettags(item))>0):
+                    tags.insert(0, main_window.gettags(item)[0])
+            if tags.count("node")==2:
+                for item in main_window.drag_data['items']:
+                    if len(main_window.gettags(item))!=0:
+                        if main_window.gettags(item)[0] == 'node':
+                            main_window.move(item, delta_x, delta_y)
+                            # record the new position
+                            main_window.drag_data["x"] = event.x
+                            main_window.drag_data["y"] = event.y
         
-        if(selected_node!=None):
-            #print(selected_node.get_x()+delta_x +"assadsadssadk"+ selected_node.get_y()+delta_y)
-            selected_node.set_x(selected_node.get_x()+delta_x)
-            selected_node.set_y(selected_node.get_y()+delta_y)
-            redraw_connections(selected_node)
+        
+                selected_node.set_x(selected_node.get_x()+delta_x)
+                selected_node.set_y(selected_node.get_y()+delta_y)
+                redraw_connections(selected_node)
 
 if __name__ == "__main__":
 
@@ -421,16 +419,6 @@ if __name__ == "__main__":
     line_button = Button(main_window, command=switch_on_make_line)
     line_button.place(x=100, y=0)
     line_button.config(image=line_photo, width="75", height="75")
-
-##    #Create Display Layer Button
-##    plus_button = Button(main_window)
-##    plus_button.place(x=200, y=0)
-##    plus_button.config(image=plus_photo, width="75", height="75")
-##
-##    #Create Hide Layer Button
-##    minus_button = Button(main_window, command=plus_level)
-##    minus_button.place(x=300,y=0)
-##    minus_button.config(image=minus_photo, width="75", height="75")
 
     #Create Delete Button
     cross_button = Button(main_window, command=switch_on_del)
