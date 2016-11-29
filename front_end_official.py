@@ -28,7 +28,7 @@ plus_minus_list = []
 definition_list = Definition_List()
 
 class FrontEndNode(Node):
-    comments = dict()
+    
     def __init__(self, x, y, i):
         Node.__init__(self)
         self.i = i
@@ -37,6 +37,7 @@ class FrontEndNode(Node):
         self.connection_list = []
         self.text_id = ""
         self.connect_id = []
+        self.comments = dict()
 
     def get_x(self):
         return self.x
@@ -76,6 +77,9 @@ class FrontEndNode(Node):
         
     def bind_comment(self, node, comment):
         self.comments[node] = comment
+        
+    def get_comments(self):
+        return self.comments
 
 """Check if click is in node"""
 def is_in_node(x, y, cir_x, cir_y):
@@ -164,12 +168,13 @@ def draw_connection(node1, node2):
 
 def redraw_connections(node):
     delete_connections(node)
+    print(node.comments)
     for a in graph.graph:
         if a!=node and node in a.get_con():
             #redrawline with comments
             draw_connection(a, node)
             new_coors = (abs(int(a.get_x()+node.get_x())/2), abs(int(a.get_y()+node.get_y())/2))
-            conn_id = main_window.create_text(new_coors, text = a.comments[node])
+            conn_id = main_window.create_text(new_coors, text = a.get_comments()[node])
             comment_rect_id = main_window.create_rectangle(main_window.bbox(conn_id), fill="#FFFFFF")
             main_window.tag_raise(conn_id)
             node.append_connect_id((conn_id, comment_rect_id))
@@ -282,8 +287,10 @@ def createConnection(line_pos):
     #-----
     second_line_pos[0].add_con(second_line_pos[1])
     second_line_pos[0].bind_comment(second_line_pos[1], comment_entry.get())
+    print(second_line_pos[0].get_comments())
     second_line_pos[1].add_con(second_line_pos[0])
     second_line_pos[1].bind_comment(second_line_pos[0], comment_entry.get())
+    print(second_line_pos[1].get_comments())
     #----
     
     conn_id = main_window.create_text(new_coors,text=comment_entry.get())
